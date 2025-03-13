@@ -2,8 +2,9 @@ name: wxread
 
 on:
   schedule:
-    - cron: '0 16 * * *'  # 北京时间 0:00 启动（UTC 时间 16:00）
-    - cron: '0 4 * * *'   # 北京时间 12:00 启动（UTC 时间 4:00） 随机两次
+    - cron: '0 15 * * *'  # 北京时间 23:00（UTC 时间 15:00）
+    - cron: '0 19 * * *'  # 北京时间 3:00（UTC 时间 19:00）
+    - cron: '0 9 * * *'   # 北京时间 17:00（UTC 时间 9:00）
   workflow_dispatch:      # 手动触发
 
 jobs:
@@ -31,16 +32,29 @@ jobs:
         python -m pip install --upgrade pip
         pip install certifi==2024.8.30 charset-normalizer==3.4.0 idna==3.10 requests==2.32.3 urllib3==2.2.3
 
-    - name: Random delay between 0-60 minutes
+    - name: Random delay between 0-10 minutes
       run: |
-        DELAY=$((RANDOM % 61)) # 生成 0 到 60 分钟的随机延迟
+        DELAY=$((RANDOM % 11)) # 生成 0 到 10 分钟的随机延迟
         echo "Delaying for $DELAY minutes..."
         sleep $((DELAY * 60)) # 转换为秒并等待
 
-    - name: Generate random READ_NUM
+    - name: Generate random READ_NUM based on schedule
       run: |
-        RANDOM_NUM=$((RANDOM % 241 + 360)) # 生成 360 到 600（180~300分钟，数字1=30秒）
+        # 根据触发时间调整运行时长
+        if [[ "${{ github.event.schedule }}" == "0 15 * * *" ]]; then
+          # 23:00 任务，运行 180-230 分钟（3小时 - 3小时50分）
+          # 为什么不是 3-4 小时（180-240 分钟）？
+          # 因为 23:00 启动 + 最大延迟 10 分钟 + 240 分钟 = 3:10 结束，
+          # 会与 3:00 任务（最早 3:00 开始）重叠 0-10 分钟。
+          # 限制最大时长为 230 分钟，确保最晚结束时间为 3:00，与 3:00 任务无缝衔接，避免冲突。
+          RANDOM_NUM=$((RANDOM % 51 + 180))
+        else
+          # 3:00 和 17:00 任务，运行 120-180 分钟（2-3 小时）
+          # 这两个时间段与前后任务间隔较大，无需特别调整。
+          RANDOM_NUM=$((RANDOM % 61 + 120))
+        fi
         echo "READ_NUM=$RANDOM_NUM" >> $GITHUB_ENV
+        echo "Running for $RANDOM_NUM minutes"
 
     - name: Run deployment script
       env:
