@@ -33,7 +33,7 @@ jobs:
 
     - name: Random delay between 0-60 minutes
       run: |
-        DELAY=$((RANDOM % 1)) # 生成 0 到 60 分钟的随机延迟
+        DELAY=$((RANDOM % 61)) # 生成 0 到 60 分钟的随机延迟
         echo "Delaying for $DELAY minutes..."
         sleep $((DELAY * 60)) # 转换为秒并等待
 
