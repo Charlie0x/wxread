@@ -48,7 +48,7 @@ jobs:
           RANDOM_NUM=$((RANDOM % 121 + 240))
         fi
         echo "READ_NUM=$RANDOM_NUM" >> $GITHUB_ENV
-        echo "Running for $((RANDOM_NUM * 30)) seconds ($((RANDOM_NUM * 30 / 60)) minutes)"
+        echo "Running for $((RANDOM_NUM * 30 / 60)) minutes"
 
     - name: Run deployment script
       env:
