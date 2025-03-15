@@ -86,4 +86,4 @@ logging.info("🎉 阅读脚本已完成！")
 
 if PUSH_METHOD not in (None, ''):
     logging.info("⏱️ 开始推送...")
-    push(f"🎉 账号(焦成龙)\n\n完成阅读{(index - 1) * 0.5}分钟 ", PUSH_METHOD)
+    push(f"🎉 账号(焦成龙)<br>完成阅读{(index - 1) * 0.5}分钟 ", PUSH_METHOD)
