@@ -33,7 +33,7 @@ jobs:
 
     - name: Random delay between 0-10 minutes
       run: |
-        DELAY=$((RANDOM % 0)) # 生成 0 到 10 分钟的随机延迟（单位：分钟）
+        DELAY=$((RANDOM % 1)) # 生成 0 到 10 分钟的随机延迟（单位：分钟）
         echo "Delaying for $DELAY minutes..."
         sleep $((DELAY * 60)) # 转换为秒并等待
 
@@ -45,7 +45,7 @@ jobs:
           RANDOM_NUM=$((RANDOM % 341 + 360))
         else
           # 17:00 任务，运行 2-3 小时（120-180分钟，240~360次）
-          RANDOM_NUM=$((RANDOM % 0 + 1))
+          RANDOM_NUM=$((RANDOM % 1 + 1))
         fi
         echo "READ_NUM=$RANDOM_NUM" >> $GITHUB_ENV
         echo "Running for $((RANDOM_NUM * 30 / 60)) minutes"
